@@ -1,0 +1,9 @@
+{
+  "uuid": "magnet@moke",
+  "name": "Magnet",
+  "description": "Click the panel icon to pull every open window onto the screen you clicked. Windows keep their workspace; only their monitor changes. Right-click for undo, or use the keyboard shortcuts.",
+  "shell-version": ["50"],
+  "settings-schema": "org.gnome.shell.extensions.magnet",
+  "gettext-domain": "magnet",
+  "version": 1
+}

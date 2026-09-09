@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="magnet">
+  <schema id="org.gnome.shell.extensions.magnet"
+          path="/org/gnome/shell/extensions/magnet/">
+
+    <key name="gather-shortcut" type="as">
+      <default><![CDATA[['<Super><Shift>g']]]></default>
+      <summary>Gather windows to the screen under the pointer</summary>
+      <description>Keyboard shortcut that pulls every window onto the monitor the mouse is currently on.</description>
+    </key>
+
+    <key name="undo-shortcut" type="as">
+      <default><![CDATA[['<Super><Shift>u']]]></default>
+      <summary>Undo the last gather</summary>
+      <description>Keyboard shortcut that sends windows back to the monitors, sizes and states they had before the last gather.</description>
+    </key>
+
+    <key name="scope" type="s">
+      <choices>
+        <choice value="all-workspaces"/>
+        <choice value="current-workspace"/>
+      </choices>
+      <default>'all-workspaces'</default>
+      <summary>Which windows to gather</summary>
+      <description>Whether to gather windows from every workspace or only from the workspace currently in view. Windows always keep the workspace they are on.</description>
+    </key>
+
+    <key name="include-dialogs" type="b">
+      <default>true</default>
+      <summary>Include dialog windows</summary>
+      <description>When off, only ordinary application windows are moved and dialogs are left where they are.</description>
+    </key>
+
+  </schema>
+</schemalist>
