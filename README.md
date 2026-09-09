@@ -163,3 +163,15 @@ caches extension ES modules by URL, so disabling and re-enabling merely re-runs
 | `extension.js` | the indicator, click routing, menu anchoring, keybindings |
 | `gather.js` | window selection, the move itself, undo snapshots — no UI |
 | `prefs.js` | preferences window |
+
+## License
+
+Magnet is free software, licensed under the **GNU General Public License,
+version 2 or (at your option) any later version**. The full text is in
+[LICENSE](LICENSE).
+
+Extensions run inside gnome-shell and build on its GPL-licensed JavaScript, so
+GPL-2.0-or-later is both the conventional choice for a GNOME extension and what
+extensions.gnome.org requires. Source files carry
+[SPDX](https://spdx.dev/) headers; the licence covers everything in the
+repository, including the icon.

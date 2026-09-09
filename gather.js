@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 moke
+// SPDX-License-Identifier: GPL-2.0-or-later
+
 /* Magnet — window gathering logic.
  *
  * Kept free of any UI so that the panel button, the keyboard shortcuts and the

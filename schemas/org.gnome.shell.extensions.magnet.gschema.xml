@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2026 moke
+  SPDX-License-Identifier: GPL-2.0-or-later
+-->
 <schemalist gettext-domain="magnet">
   <schema id="org.gnome.shell.extensions.magnet"
           path="/org/gnome/shell/extensions/magnet/">

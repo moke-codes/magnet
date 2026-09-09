@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 moke
+// SPDX-License-Identifier: GPL-2.0-or-later
+
 /* Magnet preferences. */
 
 import Adw from 'gi://Adw';

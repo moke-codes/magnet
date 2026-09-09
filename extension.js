@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 moke
+// SPDX-License-Identifier: GPL-2.0-or-later
+
 /* Magnet — pull every open window onto the screen you clicked.
  *
  * Wayland forbids one process from moving another's windows, so this has to

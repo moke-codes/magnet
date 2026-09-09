@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 moke
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Exercise prefs.js against the real ExtensionPreferences base class, without
 # opening the dialog.
 #

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 moke
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Install Magnet by symlinking this checkout into the GNOME Shell extensions
 # directory, so edits here take effect without reinstalling.
 set -euo pipefail
