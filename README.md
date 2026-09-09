@@ -1,12 +1,85 @@
 # Magnet
 
-Click the panel icon and every open window is pulled onto the screen you
-clicked on. Click the icon on your laptop panel, windows come to the laptop;
-click it on the external monitor's panel, they go there instead.
+**A GNOME Shell extension that gathers all your windows onto one screen.**
+
+Click the magnet icon in the top bar and every open window is pulled onto the
+screen you clicked on. Click it on your laptop's panel and the windows come to
+the laptop; click it on an external monitor's panel and they go there instead.
 
 Windows keep the workspace they are on — only their monitor changes.
 
-## Why this is a GNOME Shell extension and not a tray app
+Anyone is welcome to use it, file issues, or send patches. It is written for
+multi-monitor setups where the top bar is shown on every screen, which is what
+makes "click it *here*" meaningful.
+
+## Requirements
+
+- **GNOME Shell 50** on Wayland or X11. Developed and tested against Ubuntu
+  26.04 (Mutter 18).
+- **A top bar on every monitor**, for the per-screen click to be useful. GNOME
+  only draws its panel on the primary monitor, so this needs
+  [Multi Monitor Bar](https://github.com/FrederykAbryan/multi-monitors-bar_fapv2)
+  or something equivalent.
+
+Without a multi-monitor panel extension, Magnet still works — the icon just
+appears only on the primary panel, so clicking it always gathers there. The
+keyboard shortcut is unaffected, because it targets the screen under the mouse
+pointer rather than the screen that was clicked.
+
+## Install
+
+```bash
+git clone https://github.com/moke-codes/magnet.git
+cd magnet
+./install.sh
+```
+
+This symlinks the checkout into
+`~/.local/share/gnome-shell/extensions/magnet@moke`, compiles the settings
+schema and enables the extension. Because it is a symlink, later edits to the
+checkout are picked up rather than needing a reinstall.
+
+GNOME does not hot-load a newly added extension. On X11 press
+<kbd>Alt</kbd>+<kbd>F2</kbd> and run `r`; on Wayland the shell cannot be
+restarted in place, so log out and back in once. If it still does not come up
+`ACTIVE`, check `gnome-extensions info magnet@moke`.
+
+## Usage
+
+| Action | How |
+| --- | --- |
+| Gather windows to a screen | Left-click the magnet icon on that screen's panel |
+| Gather to the pointer's screen | <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd> |
+| Undo the last gather | Right-click the icon → *Undo last gather*, or <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd> |
+| Settings | Right-click the icon → *Preferences* |
+
+Undo restores each window's original monitor, and its size and position for
+windows that were neither maximized nor fullscreen. Only the most recent gather
+is undoable, and windows closed in the meantime are skipped.
+
+## Preferences
+
+- **Windows to gather** — all workspaces (default) or only the current one.
+- **Include dialog windows** — on by default.
+- **Keyboard shortcuts** — rebindable; must include Ctrl, Alt or Super.
+
+## What gets moved
+
+Ordinary application windows on every workspace, plus dialogs unless you turn
+those off in preferences. Deliberately left alone:
+
+- anything marked skip-taskbar — desktop icons (the `ding` extension creates one
+  window per monitor), docks, notification banners
+- windows Mutter reports as unmovable, which covers dialogs attached to a parent
+- windows already on the target screen
+
+Moving uses `Meta.Window.move_to_monitor()`, the same call behind GNOME's own
+<kbd>Shift</kbd>+<kbd>Super</kbd>+<kbd>Arrow</kbd>. It rescales a window
+proportionally between the two work areas and carries maximized and fullscreen
+state across, which matters when the screens differ a lot in resolution or
+scaling.
+
+## Why an extension rather than a tray app
 
 Under Wayland, no process may move another application's windows. The usual
 tools (`wmctrl`, `xdotool`) only ever worked because X11 let any client
@@ -17,15 +90,13 @@ autostart entry to maintain.
 
 ## How the per-screen click works
 
-The button is added once, to `Main.panel`. The
-[Multi Monitor Bar](https://github.com/FrederykAbryan/multi-monitors-bar_fapv2)
-extension — the thing that puts a top bar on every screen — mirrors every panel
+The button is added once, to `Main.panel`. Multi Monitor Bar mirrors every panel
 indicator onto the secondary panels automatically, and when you click one of
 those mirrors it re-emits the original Clutter event at the real indicator. That
 event still carries the coordinates of the actual click, which is how a click on
 screen 2 is told apart from a click on screen 1.
 
-Two details of that mirroring are load-bearing, and both are commented in
+Several details of that arrangement are load-bearing, and all are commented in
 `extension.js`:
 
 - The mirror only forwards a click if it finds no menu on the real indicator —
@@ -60,58 +131,6 @@ Two details of that mirroring are load-bearing, and both are commented in
   gather resolves the right monitor from them — pointing the menu at the shell's
   `dummyCursor` placed under the panel at the click position.
 
-If Multi Monitor Bar is ever removed, the icon only appears on the primary
-panel and clicking it always gathers to the primary screen. The keyboard
-shortcut keeps working correctly in that case, because it uses the pointer's
-position rather than the click's.
-
-## Usage
-
-| Action | How |
-| --- | --- |
-| Gather windows to a screen | Left-click the magnet icon on that screen's panel |
-| Gather to the pointer's screen | <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd> |
-| Undo the last gather | Right-click the icon → *Undo last gather*, or <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd> |
-| Settings | Right-click the icon → *Preferences* |
-
-Undo restores each window's original monitor, and its size and position for
-windows that were neither maximized nor fullscreen. Only the most recent gather
-is undoable, and windows closed in the meantime are skipped.
-
-## What gets moved
-
-Ordinary application windows on every workspace, plus dialogs unless you turn
-those off in preferences. Deliberately left alone:
-
-- anything marked skip-taskbar — desktop icons (the `ding` extension creates one
-  window per monitor), docks, notification banners
-- windows Mutter reports as unmovable, which covers dialogs attached to a parent
-- windows already on the target screen
-
-Moving uses `Meta.Window.move_to_monitor()`, the same call behind GNOME's own
-<kbd>Shift</kbd>+<kbd>Super</kbd>+<kbd>Arrow</kbd>. It rescales a window
-proportionally between the two work areas and carries maximized and fullscreen
-state across, which matters when the screens differ as much as a 1536×960
-laptop panel and a 2560×1440 external display.
-
-## Preferences
-
-- **Windows to gather** — all workspaces (default) or only the current one.
-- **Include dialog windows** — on by default.
-- **Keyboard shortcuts** — rebindable; must include Ctrl, Alt or Super.
-
-## Install
-
-```bash
-./install.sh
-```
-
-This symlinks the checkout into `~/.local/share/gnome-shell/extensions/magnet@moke`,
-compiles the schema and enables the extension, so later edits here are live.
-
-Because this is a Wayland session, gnome-shell cannot be restarted in place. If
-the extension does not come up `ACTIVE`, log out and back in once.
-
 ## Development
 
 ```bash
@@ -135,18 +154,12 @@ It registers the same gresource the real prefs process does and imports the
 genuine `ExtensionPreferences`, so a wrong import path or an unresolvable
 settings schema fails there rather than at the dialog.
 
-Changes to `extension.js` or `gather.js` need a full log out and back in:
-gnome-shell caches extension ES modules by URL, so disabling and re-enabling
-re-runs `enable()` on the code already in memory, and Wayland has no in-place
-shell restart.
+Changes to `extension.js` or `gather.js` need a shell restart: gnome-shell
+caches extension ES modules by URL, so disabling and re-enabling merely re-runs
+`enable()` on the code already in memory.
 
 | File | Contains |
 | --- | --- |
 | `extension.js` | the indicator, click routing, menu anchoring, keybindings |
 | `gather.js` | window selection, the move itself, undo snapshots — no UI |
 | `prefs.js` | preferences window |
-
-## Requirements
-
-GNOME Shell 50 (developed against Ubuntu 26.04, Mutter 18). Multi Monitor Bar
-is optional but needed for the per-screen click; see above.
